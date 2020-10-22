@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dayfresh',
         'USER': 'root',
-        'PASSWORD': '786914141;Fang',
+        'PASSWORD': '密码',
         'HOST': '127.0.0.1',
         'PORT': 3306
     }
@@ -134,9 +134,9 @@ REST_FRAMEWORK = {
 EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 994
 # 发送邮件的邮箱
-EMAIL_HOST_USER = 'fangyingdon@163.com'
+EMAIL_HOST_USER = '邮箱'
 # 在邮箱中设置的客户端授权密码
-EMAIL_HOST_PASSWORD = 'NVAWJVGUEAPPNYBW'
+EMAIL_HOST_PASSWORD = '授权码'
 # 打开ssl协议
 EMAIL_USE_SSL = True
 
