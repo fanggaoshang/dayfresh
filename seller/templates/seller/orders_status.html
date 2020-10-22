@@ -1,0 +1,62 @@
+{% extends 'seller/base.html' %}
+{% block main %}
+    <div class="container-fluid">
+        <h1></h1>
+        <!--商品列表-->
+        <div class="row">
+            <table class="table order_table">
+                <thead>
+                <tr>
+                    <th>订单编号</th>
+                    <th>订单商品</th>
+                    <th>发布时间</th>
+                    <th>订单价格</th>
+                    <th>商品数量</th>
+                    <th>订单价格</th>
+                    <th>订单操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for orderdetail_obj in orderdetail_obj_list %}
+                    <tr>
+                        <td>{{ orderdetail_obj.orders.orderno }}</td>
+                        <td><a href="#">{{ orderdetail_obj.goodsname }}</a></td>
+                        <td>{{ orderdetail_obj.orders.date|date:'Y-m-d' }}</td>
+                        <td>{{ orderdetail_obj.goodsprice }}</td>
+                        <td>{{ orderdetail_obj.goodsnum }}</td>
+                        <td>{{ orderdetail_obj.goodsxiaoji }}</td>
+                        <td>
+                            <button class="btn btn-primary">确认发货</button>
+                            <button class="btn btn-danger">拒绝订单</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <h1></h1>
+        <!--分页-->
+        <div class="row">
+            <ul class="pagination ml-auto">
+                <li class="page-item">
+                    <a class="page-link">上一页</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">1</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">2</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">3</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">4</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">下一页</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

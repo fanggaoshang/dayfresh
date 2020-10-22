@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购物车</title>
+    <link rel="stylesheet" type="text/css" href="/static/buyer/css/bootstrap.css">
+    <script src="/static/buyer/js/jquery.min.js"></script>
+    <script src="/static/buyer/js/bootstrap.js"></script>
+    <style>
+        /*重写样式*/
+        a {
+            color: #333;
+        }
+
+        /*高度*/
+        .height_100 {
+            width: 100px;
+        }
+
+        /*宽度*/
+        .width_100 {
+            width: 100px;
+        }
+
+        /*行高*/
+
+        /*内边距*/
+        .pt_28 {
+            padding-top: 28px;
+        }
+
+        .pb_28 {
+            padding-bottom: 28px;
+        }
+
+        .pl_15 {
+            padding-left: 15px;
+        }
+
+        .pr_15 {
+            padding-right: 15px;
+        }
+
+        /*外边距*/
+
+        /*文字*/
+
+        /*边框*/
+        .border_1 {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+{% include 'buyer/nav.html' %}
+
+<div class="container ">
+    <div class="row pt_28 pb_28">
+        <div class="col-lg-3">
+            <a href="/"><img src="/static/buyer/images/logo.png"></a>
+            <span class="pl_15 pr_15">|</span>
+            <span>购物车</span>
+        </div>
+        <div class="col-lg-7 col-lg-offset-2">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search" placeholder="搜索商品">
+                <span class="input-group-btn">
+                    <button class="btn btn-danger" type="submit">搜索</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    {% if car_dic_list %}
+        <form action="/buyer/orders_list/" method="post">
+            {% csrf_token %}
+            <table class="table row">
+                <caption>全部商品<span class="text-danger total_count">2</span>件</caption>
+                <thead>
+                <tr>
+                    <td class="col-lg-1"></td>
+                    <td class="col-lg-2">商品名称</td>
+                    <td class="col-lg-2">商品单位</td>
+                    <td class="col-lg-2">商品价格</td>
+                    <td class="col-lg-2">数量</td>
+                    <td class="col-lg-2">小计</td>
+                    <td class="col-lg-1">操作</td>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for dic in car_dic_list %}
+                    <tr>
+                        <td><input type="checkbox" checked name="shoppingcarids"
+                                   value="{{ dic.car_obj.id }}"></td>
+                        <td>
+                            <span class="center-block">{{ dic.car_obj.goods_name }}</span>
+                            <img src="/static/{{ dic.car_obj.goods_img }}"
+                                 class="width_100 height_100 border_1">
+                        </td>
+                        <td>500g</td>
+                        <td>{{ dic.car_obj.goods_price }}元</td>
+                        <td>
+                            <div class="input-group width_100">
+
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default add" type="button">
+                                        <input type="hidden" id="shoppingcar_id"
+                                               value="{{ dic.car_obj.id }}">
+                                        +</button>
+                                </span>
+
+                                <input type="text" class="form-control text-center count" name="search"
+                                       value="{{ dic.car_obj.goods_num }}"
+                                       style="width: 50px">
+
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default minus" type="button">-</button>
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{ dic.xiaoji }}元</td>
+                        <td>
+                            <a href="/buyer/delete_car/?id={{ dic.car_obj.id }}">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td><input type="checkbox" checked></td>
+                    <td>全选</td>
+                    <td colspan="4" class="text-right">
+                        <span class="center-block">合计(不含运费)：¥<span class="text-danger total_price">42.6</span></span>
+                        <span class="center-block">共计<span class="text-danger total_count">2</span>件商品</span>
+                    </td>
+                    <td>
+                        <input type="submit" class="btn btn-danger" value="去结算">
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </form>
+    {% else %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="col-md-12" style="text-align: center;font-size: 16px;">
+                <span style="color: red">{{ message }}</span>
+                <a href="/buyer/login/">去登录</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-md-12" style="text-align: center;font-size: 16px;">
+                <span style="color: red">还没有商品呢，请先添加商品...</span>
+                <a href="/buyer/index/">返回首页</a>
+            </div>
+        {% endif %}
+    {% endif %}
+
+</div>
+{% include 'buyer/footer.html' %}
+
+<script type="text/javascript">
+    /*计算被选中的商品的总件数和总价格*/
+    function update_page_info() {
+        // 获取所有被选中的商品的checkbox
+        // 获取所有被选中的商品所在的ul元素
+        total_count = 0;
+        total_price = 0;
+        $("tbody").find(":checked").parents("tr").each(function () {
+            // 获取商品的数目和小计
+            count = $(this).children("td").eq(4).find("input").eq(1).val();
+            amount = $(this).children("td").eq(5).text();
+            // 累加计算商品的总件数和总价格
+            count = parseInt(count);
+            amount = parseFloat(amount);
+            total_count += count;
+            total_price += amount
+        });
+        // 设置被选中的商品的总件数和总价格
+        $(".total_price").text(total_price.toFixed(2))
+        $(".total_count").text(total_count)
+    }
+
+    /*商品的全选和全不选*/
+    $("tfoot").find(":checkbox").change(function () {
+        // 获取全选的checkbox的选中状态
+        is_checked = $(this).prop("checked")
+        // 遍历商品的对应的checkbox，设置这些checkbox的选中状态和全选的checkbox保持一致
+        $("tbody").find(":checkbox").each(function () {
+            $(this).prop("checked", is_checked)
+        })
+        // 更新页面的信息
+        update_page_info()
+    });
+
+    /*商品对应的checkbox状态发生改变时，设置全选checkbox的状态*/
+    $("tbody").find(":checkbox").change(function () {
+        // 获取页面上所有商品的数目
+        all_len = $("tbody").children("tr").length
+        // 获取页面上被选中的商品的数目
+        checked_len = $("tbody").find(":checked").length
+        is_checked = true
+        if (checked_len < all_len) {
+            is_checked = false
+        }
+        $("tfoot").find(":checkbox").prop("checked", is_checked)
+        // 更新页面的信息
+        update_page_info()
+    });
+
+
+    /*购物车商品数量的增加*/
+    $(".add").click(function () {
+        // 获取商品的单价和商品的数量
+        price = parseFloat($(this).parents("td").prev().text());
+        count = parseInt($(this).parent().next().val());// 数量
+        count++; // 商品数量加1
+        // 重新计算商品的数目
+        $(this).parent().next().val(count);
+        //重新计算商品小计
+        amount = count * price;
+        $(this).parents("td").next().text(amount.toFixed(2) + "元");
+        // 获取商品对应的checkbox的选中状态，如果被选中，更新页面信息
+        is_checked = $(this).parents("tr").find(":checkbox").prop("checked");
+        if (is_checked) {
+            // 获取购物车id
+            var car_id = $(this).children().val();
+            console.log(car_id);
+
+            // 发送ajax 请求
+            $.ajax({
+                url: '/buyer/change_car_num/',
+                data: {'car_id': car_id},
+                type: 'get',
+                success: function (result) {
+                    alert('success');
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+
+
+            // 更新页面信息
+            update_page_info()
+        }
+    });
+
+    /*购物车商品数量的减少*/
+    $(".minus").click(function () {
+        // 获取商品的单价和商品的数量
+        price = parseFloat($(this).parents("td").prev().text());
+        count = parseInt($(this).parent().prev().val());
+        // 校验参数
+        count = parseInt(count) - 1;
+        if (count <= 0) {
+            return
+        }
+        // 重新设置商品的数目
+        $(this).parent().prev().val(count);
+        //重新计算商品小计
+        amount = count * price;
+        $(this).parents("td").next().text(amount.toFixed(2) + "元");
+        // 获取商品对应的checkbox的选中状态，如果被选中，更新页面信息
+        is_checked = $(this).parents("tr").find(":checkbox").prop("checked");
+        if (is_checked) {
+            // 更新页面信息
+            update_page_info()
+        }
+    });
+
+    /* 删除购物车中的记录*/
+    /*
+        $("tbody tr").each(function () {
+            $(this).children("td:eq(6)").children("a").click(function () {
+                // 获取商品所在的tr元素
+                tr = $(this).parents("tr");
+                // 删除成功，异常页面上商品所在的ul元素
+                tr.remove();
+                // 获取商品对应的checkbox的选中状态，如果被选中，更新页面信息
+                is_checked = $(this).parents("tr").find(":checkbox").prop("checked");
+                if (is_checked) {
+                    // 更新页面信息
+                    update_page_info()
+                }
+            })
+        });
+    */
+    /* 购买数量手动修改*/
+    $(".count").keydown(function (e) {
+        code = e.keyCode
+        if (!((code >= 48 && code <= 57) || code == 8 || code == 46)) {
+            return false
+        }
+    })
+    $(".count").blur(function (e) {
+        // 获取商品的单价和商品的数量
+        price = parseFloat($(this).parents("td").prev().text())
+        count = parseInt($(this).val())
+        //重新计算商品小计
+        amount = count * price
+        $(this).parents("td").next().text(amount.toFixed(2) + "元")
+        // 获取商品对应的checkbox的选中状态，如果被选中，更新页面信息
+        is_checked = $(this).parents("tr").find(":checkbox").prop("checked")
+        if (is_checked) {
+            // 更新页面信息
+            update_page_info()
+        }
+    })
+
+
+    //更新显示
+    update_page_info()
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+{% extends 'seller/base.html' %}
+{% block main %}
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        {#                <h1 class="h3 mb-4 text-gray-800">申请店铺</h1>#}
+
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 mb-4">
+
+                <!-- Circle Buttons -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">添加商品</h6>
+                    </div>
+                    <div class="card-body">
+                        <form class="user" action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group row">
+                                <div class="col-sm-11 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" name="name"
+                                           id="exampleFirstName" placeholder="商品名称">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-11 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" name="price"
+                                           id="exampleFirstName" placeholder="商品价格">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-11 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" name="bzq"
+                                           id="exampleFirstName" placeholder="保质期">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-11 mb-3 mb-sm-0">
+                                    <input type="date" class="form-control form-control-user" name="productdate"
+                                           id="exampleFirstName" placeholder="生产日期">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-11 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" name="desc"
+                                           id="exampleFirstName" placeholder="描述">
+                                </div>
+                            </div>
+
+                             <div class="form-group row">
+                                <div class="col-sm-11 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" name="detail"
+                                           id="exampleFirstName" placeholder="商品详情">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-11 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" name="level"
+                                           id="exampleFirstName" placeholder="商品级别(商品0,轮播图1,广告2)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">
+                                    &nbsp;&nbsp;&nbsp;上传商品图片：
+                                    <input type="file" multiple id="goodsimg" name="goodsimg">
+                                </label>
+
+                            </div>
+                            &nbsp;&nbsp;&nbsp;商品类型
+                            <select name="goodstype_id">
+                                {% for goodstype_obj in goodstype_obj_list %}
+                                    <option value="{{ goodstype_obj.id }}">{{ goodstype_obj.name }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <div class="form-group row">
+                                <div class="col-sm-11">
+                                    <input type="submit" value="添加商品"
+                                           class="btn btn-primary btn-user btn-block"/>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-2"></div>
+
+
+        </div>
+
+    </div>
+{% endblock %}

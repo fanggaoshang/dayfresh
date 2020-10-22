@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <!--引用-->
+    <script src="/static/buyer/js/jquery.min.js"></script>
+    <script src="/static/buyer/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/static/buyer/css/bootstrap.css">
+    <style>
+
+        /*1.搜索部分*/
+        .search_bar { /*距离导航栏高度*/
+            margin-top: 15px;
+        }
+
+
+        .search span { /*用户中心文字*/
+            font-size: 18px;
+            font-weight: 500;
+            font-family: "Microsoft Yahei";
+            vertical-align: middle;
+        }
+
+
+        /*3.*/
+        .main {
+            margin-top: 20px;
+        }
+
+        #address {
+            display: block;
+        }
+
+        #allorders, #userinfo {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<!--1.导航开始-->
+{% include 'buyer/nav.html' %}
+<!--导航结束-->
+<div class="container">
+    <!--2.搜索框开始-->
+    <div class="search">
+        <div class="row ">
+            <!--左边图片和文字-->
+            <div class="col-lg-5">
+                <a href="/"><img src="/static/buyer/images/logo.png" alt="..." class="img-rounded"></a>
+                <span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;用户中心</span>
+            </div>
+            <!--右边表单-->
+            <div class="col-lg-6 col-lg-offset-1 search_bar">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="搜索商品">
+                        <span class="input-group-btn">
+                    <button class="btn btn-success" style="padding: 6px 50px" type="submit">搜索</button>
+                </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--搜索框结束-->
+
+
+    <!--3.主体-->
+    <div class="main">
+        <ul class="nav nav-tabs">
+            <li role="presentation"><a href="#">个人信息</a></li>
+            <li role="presentation"><a href="#">全部订单</a></li>
+            <li role="presentation" class="active"><a href="#">收货地址</a></li>
+        </ul>
+        <br/>
+        <div class="info">
+            <!--基本信息-->
+            <div id="userinfo">
+                <div class="panel panel-default col-lg-12">
+                    <div class="panel-heading col-lg-12">
+                        <span class="col-lg-11">用户基本信息</span>
+                        <span class="col-lg-1">
+                            <a class="btn btn-default btn-xs" href="/edit_user/" role="button">&nbsp;&nbsp;修&nbsp;改&nbsp;&nbsp;</a>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            用户名: {{ seller_obj.name }}<br/>
+                            联系方式: {{ seller_obj.phone }} <br/>
+                            联系地址: {{ seller_obj.address }}
+                        </div>
+                    </div>
+                    <div class="panel-heading">最近浏览</div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="#" class="thumbnail">
+                                <img src="/static/buyer/images/goods/goods006.jpg" alt="...">
+                            </a>
+                            <div style="text-align: center">
+                                <h4><a href="detail.html">进口西梅</a></h4>
+                                <span class="prize" style="color: red">￥16.80</span>
+                                <span class="unit">16.80/500g</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" class="thumbnail">
+                                <img src="/static/buyer/images/goods/goods001.jpg" alt="...">
+                            </a>
+                            <div style="text-align: center">
+                                <h4><a href="detail.html">大兴大棚草莓</a></h4>
+                                <span class="prize" style="color: red">￥16.80</span>
+                                <span class="unit">16.80/500g</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" class="thumbnail">
+                                <img src="/static/buyer/images/goods/goods004.jpg" alt="...">
+                            </a>
+                            <div style="text-align: center">
+                                <h4><a href="detail.html">吐鲁番梨光杏</a></h4>
+                                <span class="prize" style="color: red">￥16.80</span>
+                                <span class="unit">16.80/500g</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" class="thumbnail">
+                                <img src="/static/buyer/images/goods/goods005.jpg" alt="...">
+                            </a>
+                            <div style="text-align: center">
+                                <h4><a href="detail.html">黄肉桃</a></h4>
+                                <span class="prize" style="color: red">￥16.80</span>
+                                <span class="unit">16.80/500g</span>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <!--所有订单-->
+            <div id="allorders">
+                <div class="panel panel-default col-lg-12">
+                    <div class="panel-heading">未支付</div>
+                    <div class="panel-body">
+                        <table class="table table-bordered table-hover">
+                            {% for orders_obj in orders_obj_list %}
+                                {% if orders_obj.state == False %}
+                                    {% for orderdetail_obj in orders_obj.orderdetail_set.all %}
+
+                                        <tr align="center" valign="middle">
+                                            <td>
+                                                <img class="img-thumbnail"
+                                                     src="/static/{{ orderdetail_obj.goodsimg.name }}" width="60px"
+                                                     alt="">
+                                            </td>
+                                            <td>{{ orderdetail_obj.goodsname }}</td>
+                                            <td>{{ orderdetail_obj.goodsprice }}元/500g</td>
+                                            <td>{{ orderdetail_obj.goodsnum }}</td>
+                                            <td>{{ orderdetail_obj.goodsxiaoji }}元</td>
+                                            <td>待付款</td>
+                                            <td><a href="">去付款</a></td>
+                                            <td>订单编号：<br>{{ orders_obj.orderno }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="panel-heading">已支付</div>
+                    <div class="panel-body">
+                        <table class="table table-bordered table-hover">
+
+                            {% for orders_obj in orders_obj_list %}
+                                {% if orders_obj.state == True %}
+                                    {% for orderdetail_obj in orders_obj.orderdetail_set.all %}
+
+                                        <tr align="center" valign="middle">
+                                            <td>
+                                                <img class="img-thumbnail"
+                                                     src="/static/{{ orderdetail_obj.goodsimg.name }}" width="60px"
+                                                     alt="">
+                                            </td>
+                                            <td>{{ orderdetail_obj.goodsname }}</td>
+                                            <td>{{ orderdetail_obj.goodsprice }}元/500g</td>
+                                            <td>{{ orderdetail_obj.goodsnum }}</td>
+                                            <td>{{ orderdetail_obj.goodsxiaoji }}元</td>
+                                            <td>已付款</td>
+                                            <td><a href="">查看物流</a></td>
+                                            <td>订单编号：<br/>{{ orders_obj.orderno }}</td>
+                                        </tr>
+
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+
+                        </table>
+                    </div>
+                    <div align="center">
+                        <nav aria-label="...">
+                            <ul class="pagination">
+                                <li class="disabled"><a href="#" aria-label="Previous"><span
+                                        aria-hidden="true">&laquo;</span></a></li>
+                                <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li>
+                                    <a href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!--收货地址-->
+            <div id="address">
+                <div class="panel panel-default col-lg-12">
+                    <div class="panel-heading">当前地址:</div>
+                    <div class="panel-body">
+                        <div class="col-lg-8">
+                            {% for address_obj in address_obj_list %}
+                                {% if address_obj.status == True %}
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optionsRadios" id="optionsRadios1"
+                                                   value="{{ address_obj.id }}"
+                                                   checked>
+                                            {{ address_obj.detail_address }} （{{ address_obj.receiver }}
+                                            收） {{ address_obj.phone}}
+                                        </label>
+                                        <a href="/buyer/edit_address/?id={{ address_obj.id }}"
+                                           class="btn btn-default">编辑</a>
+                                    </div>
+                                {% else %}
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optionsRadios" id="optionsRadios1"
+                                                   value="{{ address_obj.id }}">
+                                            {{ address_obj.detail_address }} （{{ address_obj.receiver }}
+                                            收） {{ address_obj.phone }}
+                                        </label>
+                                        <a href="/buyer/edit_address/?id={{ address_obj.id }}"
+                                           class="btn btn-default">编辑</a>
+                                    </div>
+                                {% endif %}
+
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="panel-heading">添加地址</div>
+                    <div class="row col-lg-8" style="margin-top: 10px">
+                        <form class="form-horizontal" method="post" action="/buyer/add_address/">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="shoujianren" class="col-sm-2 control-label">收件人</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="shoujianren" name="receiver" placeholder="收件人">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="xiangxiaddress" class="col-sm-2 control-label">详细地址</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" placeholder="详细地址" name="detail_address" id="xiangxiaddress"
+                                              rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="youbian" class="col-sm-2 control-label">邮编</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="youbian" name="postcode" placeholder="邮政编码">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="youbian" class="col-sm-2 control-label">手机</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="phone" id="phone" placeholder="手机号">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button id="add_address_btn"
+                                        class="btn btn-default col-lg-4 col-lg-offset-4">&nbsp;&nbsp;提&nbsp;交&nbsp;&nbsp;
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--4.footer部分-->
+{% include 'buyer/footer.html' %}
+<script>
+    $(function () {
+        // 选项卡切换
+        $("ul li").on("click", function () {
+            //获取索引值
+            var index = $(this).index();
+            $(".info>div").eq(index).show().siblings().hide();
+            //console.log($(this)[0]);
+            $(this).addClass('active');
+            $(this).siblings().removeClass('active');
+        });
+
+        // 添加地址
+        {% comment %}
+        /*
+        $("#add_address_btn").click(function () {
+            // 0. 测试是否好用
+            //alert('test');
+            // 1. 获取 表单中的内容
+            var csrfmiddlewaretoken = '{{ csrf_token }}';
+            var shoujianren = $("#shoujianren").val();
+            var xiangxiaddress = $("#xiangxiaddress").val();
+            var youbian = $("#youbian").val();
+            var phone = $("#phone").val();
+
+            // 2. 发送ajax 请求
+            $.ajax({
+                url: "/buyer/add_address/",
+                type: 'post',
+                data: {
+                    'csrfmiddlewaretoken': csrfmiddlewaretoken,// key 固定，因为django使用。
+                    'shoujianren': shoujianren,
+                    'xiangxiaddress': xiangxiaddress,
+                    'youbian': youbian,
+                    'phone': phone
+                },
+                success: function (result) {
+                    alert('success!!!');
+                    // 刷新当前页面
+                    window.location.href = '/buyer/usercenter/';
+                },
+                error: function (result) {
+                    alert('error!!!');
+                }
+            })
+        });
+        */
+        {% endcomment %}
+
+        // 单选按钮设置点击监听，修改 选中状态
+        $('input[type="radio"]').click(function () {
+            //alert('xx');
+            // 1.获取地址对应的id
+            var user_address_id = $(this).val();
+            //alert(id);
+            $.ajax({
+                url: '/buyer/alert_address_status/',
+                type: 'get',
+                data: {'user_address_id': user_address_id},
+                success: function (result) {
+                    console.log(result.suc)
+                },
+                error: function (result) {
+                    console.log(result.suc)
+                }
+            })
+
+        })
+
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天天生鲜——首页</title>
+    <script src="/static/buyer/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/buyer/css/bootstrap.css"/>
+    <script src="/static/buyer/js/bootstrap.js"></script>
+    <style>
+        .makepos {
+            padding-top: 20px;
+        }
+
+        .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+        }
+
+        .myps span {
+            margin-left: 3px;
+        }
+
+        .breadcrumb {
+            background-color: white;
+        }
+
+        hr {
+            border-width: 2px;
+            border-color: green;
+        }
+
+        .newheight {
+            height: 34px;
+            line-height: 34px;
+        }
+
+        .span1 {
+            font-size: 16px;
+            color: black;
+            margin-left: 200px;
+        }
+
+        .newprice {
+            font-size: 22px;
+            color: red;
+        }
+
+        .title {
+            margin-top: 0px;
+        }
+
+        .newspace {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+{% include 'buyer/nav.html' %}
+<header class="container">
+    <div class="col-xs-12 col-sm-3">
+        <a href="/"><img src="/static/buyer/images/logo.png"/></a>
+    </div>
+    <div class="col-xs-12 col-sm-6 makepos">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for...">
+            <span class="input-group-btn">
+                    <button class="btn btn-success" type="button">搜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;索</button>
+                </span>
+        </div><!-- /input-group -->
+    </div>
+    <div class="col-xs-12 col-sm-3">
+        <a href="/buyer/my_goodscar/">
+            <button class="btn btn-success pull-right" type="button">
+                <img src="/static/buyer/images/cart.png"/>我的购物车 <span class="badge">4</span>
+            </button>
+        </a>
+    </div>
+</header>
+<menu class="container">
+    <div class="col-xs-12 col-sm-2">
+        <ul class="list-group">
+            <li class="list-group-item active">全部商品分类</li>
+        </ul>
+
+    </div>
+    <div class="col-xs-12 col-sm-10">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#">首页</a></li>
+            <li role="presentation"><a href="#">手机生鲜</a></li>
+            <li role="presentation"><a href="#">抽奖</a></li>
+        </ul>
+    </div>
+</menu>
+<article class="container">
+    <p class="col-xs-12">全部分类 > {{ goods_obj.goodstype.name }} > 商品详情</p>
+</article>
+<section class="container">
+    <input type="hidden" id="goods_id" value="{{ goods_obj.id }}">
+    <div class="col-xs-12 col-sm-5">
+        <img src="/static/{{ goods_obj.images.name }}" width="350px"/>
+    </div>
+    <div class="col-xs-12 col-sm-7">
+        {% for message in messages %}
+            <input type="hidden" id="message" value="{{ message }}" >
+        {% endfor %}
+        <h2 class="title">{{ goods_obj.name }}</h2>
+        <p>{{ goods_obj.desc }}</p>
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h1 id="price_detail">¥{{ goods_obj.price }}<span class="span1">500g</span></h1>
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <p class="newheight">数量:</p>
+        </div>
+        <div class="input-group col-xs-3">
+            <span class="input-group-addon" id="btn_add">+</span>
+            <input type="text" name="number" id="number" class="form-control newwidth" value="1">
+            <span class="input-group-addon" id="btn_sub">-</span>
+        </div>
+        <div class="col-xs-12">
+            <p>总价:<span class="newprice" id="newprice">{{ goods_obj.price }}元</span></p>
+        </div>
+
+        <p class="col-xs-3"><a class="btn btn-danger btn-lg" href="javascript:void 0" id="now_buy"
+                               role="button">立即购买</a>
+        </p>
+        <p class="col-xs-3"><input type="button" id="add_car" value="加入购物车" class="btn btn-danger btn-lg"
+                                   role="button"></p>
+
+    </div>
+</section>
+
+<!--新品推荐-->
+<section class="container newspace">
+    <div class="col-xs-12 col-sm-2">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title text-center newheight">新品推荐</h3>
+            </div>
+            <div class="panel-body">
+                {% for goods_obj in goods_obj_list %}
+                    {% if  forloop.counter <= 2 %}
+                        <div class="col-xs-12 col-sm-12">
+                            <a href="/buyer/goods_detail/?id={{ goods_obj.id }}" class="thumbnail">
+                                <img src="/static/{{ goods_obj.images.name }}" class="img-responsive">
+                                <p class="text-center">{{ goods_obj.name }}</p>
+                                <p class="text-center">￥{{ goods_obj.price }}</p>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-10">
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#home" data-toggle="tab">商品介绍</a></li>
+            <li><a href="#profile" data-toggle="tab">评论</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="home">
+                <h3>商品详情</h3>
+                <p>{{ goods_obj.detail }}</p>
+            </div>
+            <div class="tab-pane" id="profile">...</div>
+        </div>
+
+    </div>
+</section>
+
+{% include 'buyer/footer.html' %}
+<script>
+    $(function () {
+        var message = $("#message").val()
+        if (message){
+            alert(message)
+        }
+        // 1立即购买
+        $("#now_buy").click(function () {
+            var number = $("#number").val(); // 商品数量
+            $(this).attr('href', '/buyer/now_buy/?goodsid={{ goods_obj.id }}&number=' + number)
+        });
+
+        $("#add_car").click(function () {
+            var goods_id = $("#goods_id").val()
+            var goods_num = $("#number").val()
+            $.ajax({
+                url: '/buyer/add_cart/',
+                type: 'get',
+                data: {
+                    goods_id: goods_id,
+                    goods_num: goods_num
+                },
+                success: function (result) {
+                    if (result.suc == "ok") {
+                        alert("添加购物车成功")
+                    } else {
+                        alert("请登录后再添加购物车")
+                    }
+                }
+            })
+        })
+
+        // 2.添加购物车
+        /*
+        $("#add_car").click(function () {
+            // (1).获取商品的数量和商品id
+            var number = $("#number").val();
+            var goods_id = $("#goods_id").val();
+            $.ajax({
+                url: '/buyer/add_cart/',
+                type: 'get',
+                data: {'number': number, 'goods_id': goods_id},
+                success: function (result) {
+                    //alert('success');
+                    if (result.code == 0) {
+                        // 没有登录
+                        //alert(result.status);
+                        var flag = confirm('是否跳转到登录页面?');
+                        if (flag) {
+                            window.location.href = '/buyer/login/';
+                        }
+                    } else {
+                        // 添加购物车成功
+                        alert(result.status);
+                    }
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        });
+*/
+
+        // 3.商品数量增减操作
+        $("#btn_add").click(function () {
+            var value = $(this).next().val();
+            value = parseInt(value);
+            value += 1;
+            $(this).next().val(value);
+            /*取价格的html文本单位*/
+            var htmls = $("#price_detail").html();
+            /*用span进行切分,取出价格，转换成float型*/
+            prices = htmls.split("span");
+            price = prices[0];
+            price = price.substring(1, price.length - 1);
+            price = parseFloat(price);
+            total = value * price;
+            total = total.toFixed(2);
+            /*求总价修改总价栏*/
+            $("#newprice").text(total + "元")
+        });
+        $("#btn_sub").click(function () {
+            var value = $(this).prev().val();
+            value = parseInt(value);
+            value -= 1;
+            value = value <= 1 ? 1 : value;
+            $(this).prev().val(value);
+            /*取价格的html文本单位*/
+            var htmls = $("#price_detail").html();
+            /*用span进行切分,取出价格，转换成float型*/
+            prices = htmls.split("span");
+            price = prices[0];
+            price = price.substring(1, price.length - 1);
+            price = parseFloat(price);
+            total = value * price;
+            /*求总价修改总价栏*/
+            $("#newprice").text(total.toFixed(2) + "元")
+        });
+    })
+</script>
+</body>
+</html>

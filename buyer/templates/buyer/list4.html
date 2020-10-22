@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天天生鲜——首页</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.css"/>
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/vue.min.js"></script>
+    <script src="/static/js/axios.min.js"></script>
+
+    <style>
+        .makepos {
+            padding-top: 20px;
+        }
+
+        .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+        }
+
+        .myps span {
+            margin-left: 3px;
+        }
+
+        .newheight {
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .breadcrumb {
+            background-color: white;
+        }
+
+        hr {
+            border-width: 2px;
+            border-color: green;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid container">
+        <!-- Brand and to-only">Toggle navigation</span>
+            <span class="icon-bggle get grouped for better mobile display -->
+        <div class="navbar-header ">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">欢迎来到天天生鲜</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="bootstrap_login.html">登录</a></li>
+                <li><a href="bootstrap_register.html">注册</a></li>
+                <li><a href="user-center-info.html">用户中心</a></li>
+                <li><a href="bootstrap_cart.html">我的购物车</a></li>
+                <li><a href="myorders.html">我的订单</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<header class="container">
+    <div class="col-xs-12 col-sm-3">
+        <img src="/static/images/logo.png"/>
+    </div>
+    <div class="col-xs-12 col-sm-6 makepos">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for...">
+            <span class="input-group-btn">
+                    <button class="btn btn-success" type="button">搜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;索</button>
+                </span>
+        </div><!-- /input-group -->
+    </div>
+    <div class="col-xs-12 col-sm-3">
+        <button class="btn btn-success pull-right" type="button">
+            <img src="/static/images/cart.png"/>我的购物车 <span class="badge">4</span>
+        </button>
+    </div>
+</header>
+<menu class="container">
+    <div class="col-xs-12 col-sm-2">
+        <ul class="list-group">
+            <li class="list-group-item active">全部商品分类</li>
+        </ul>
+
+    </div>
+    <div class="col-xs-12 col-sm-10">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#">首页</a></li>
+            <li role="presentation"><a href="#">手机生鲜</a></li>
+            <li role="presentation"><a href="#">抽奖</a></li>
+        </ul>
+    </div>
+</menu>
+<article class="container">
+    <p class="col-xs-12">全部分类 > 新鲜水果</p>
+</article>
+<section class="container">
+    <div class="col-xs-12 col-sm-2">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title text-center newheight">新品推荐</h3>
+            </div>
+            <!-- 1.新品推荐 -->
+            <div class="panel-body">
+                {% for goods_obj in goods_list_obj %}
+                    <div class="col-xs-12 col-sm-12">
+                        <a href="detail.html" class="thumbnail">
+                            <img src="/static/{{ goods_obj.goodsimg_set.first.imgaddress.name }}"
+                                 class="img-responsive">
+                            <p class="text-center">{{ goods_obj.name }}</p>
+                            <p class="text-center">￥{{ goods_obj.price }}</p>
+                        </a>
+                    </div>
+                {% endfor %}
+
+                {% comment %}<div class="col-xs-12 col-sm-12">
+                    <a href="detail.html" class="thumbnail">
+                        <img src="/static/buyer/images/goods/goods001.jpg" class="img-responsive">
+                        <p class="text-center">进口柠檬</p>
+                        <p class="text-center">￥3.90</p>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-12">
+                    <a href="#" class="thumbnail">
+                        <img src="/static/buyer/images/goods/goods002.jpg" class="img-responsive">
+                        <p class="text-center">玫瑰香葡萄</p>
+                        <p class="text-center">￥16.80</p>
+                    </a>
+                </div>{% endcomment %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 2.用于ajax请求时携带的商品类型id -->
+    <input type="hidden" id="goodstype_id" value="{{ goodstype_id }}">
+    <div class="col-xs-12 col-sm-10" id="content">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <ul class="nav nav-pills">
+                    <li><a href="">默认</a></li>
+                    <li><a href="">价格</a></li>
+                    <li><a href="">人气</a></li>
+                </ul>
+            </div>
+            <div class="panel-body">
+
+                {% verbatim %}
+                <div class="col-xs-12 col-sm-3" v-for="goods in results">
+                    <a href="#" class="thumbnail">
+                        <img :src="'/static/'+goods.image">
+                    </a>
+                    <p class="text-center">{{ goods.name }}</p>
+                    <p class="text-center myps">
+                        <span>￥{{ goods.price }}</span>
+                        <span>{{ goods.price }}/{{goods.unite  }}</span>
+                        <span><img src="/static/images/carts.png"/></span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12">
+                <ul class="pagination col-xs-10 col-sm-10">
+                    <li :class="{'disabled':page==1}">
+                        <a href="#" @click.prevent="select_page(page-1)">
+                            <span>上一页</span>
+                        </a>
+                    </li>
+
+                    <li v-for="item in page_list" :class="{'active':page==item.val}">
+                        <a href="#" @click.prevent="select_page(item.val)" v-text="item.text"></a>
+                    </li>
+
+                    <li :class="{'disabled':page==page_count}">
+                        <a href="#" @click.prevent="select_page(page+1)">
+                            <span>下一页</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endverbatim %}
+
+</section>
+<hr/>
+<footer>
+    <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+        <ol class="breadcrumb container">
+            <li>关于我们</li>
+            <li>联系我们</li>
+            <li class="active">招聘人才</li>
+            <li>友情链接</li>
+        </ol>
+        <p class="container">
+            CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved
+        </p>
+        <p class="container">
+            电话：010-****888 京ICP备*******8号
+        </p>
+    </div>
+</footer>
+</body>
+<script>
+    // 分页js
+    $(function () {
+        // 1. 获取商品类型id
+        goodstype_id = $("#goodstype_id").val();
+        new Vue({
+            el: '#content',
+            data: {
+                page: 1,// 当前页码
+                results: [],// 盛放商品
+                count: 0,// 商品总数
+                page_size: 20,// 当前商品数量
+                page_group: 5,// 分页页码范围
+                goodstype_id: goodstype_id, // 商品类型id
+            },
+            methods: {
+                // 初始化操作
+                select_init: function () {
+                    var _this = this;// _this 代表 vue对象中的this, zai axios 中也有自己的this。
+                    url = '/buyer/more_list_view/?goodstype_id=' + this.goodstype_id;
+                    axios.get(url).then(function (response) {
+                        _this.results = response.data.results;
+                        _this.count = response.data.count;
+                        console.log(response.data.count);
+                    })
+                },
+                select_page: function (page_num) {
+                    if (page_num != this.page && page_num > 0 && page_num <= this.page_count) {
+                        this.page = page_num;
+                    } else {
+                        return
+                    }
+                    var _this = this;
+                    url = '/buyer/more_list_view/?goodstype_id=' + this.goodstype_id + '&page=' + page_num;
+                    axios.get(url).then(function (response) {
+                        _this.results = response.data.results;
+                        _this.count = response.data.count
+                    })
+                },
+            },
+            mounted() {//窗体加载之后运行,相当于js的window.onload
+                this.select_init();
+            },
+            computed: {
+                // 计算总页码数
+                page_count: function () {
+                    return Math.ceil(this.count / this.page_size)
+                },
+                page_list: function () {
+                    var list = [];
+                    var count = Math.floor(this.page_group / 2), center = this.page;
+                    var left = 1, right = this.page_count;
+
+                    // 如果返回的页码 大于了5
+                    if (this.page_count > this.page_group) {
+                        // 1 2 3 4 5 6 7 8
+                        if (this.page > count + 1) {// 当前页面 大于了 中间一半  count= 6   this.page=7
+                            if (this.page < this.page_count - count) { // 总页码数-中间值=剩余页码>4
+                                left = this.page - count; // 4-2 = 2  left = 2 左边从页码2开始计算
+                                right = this.page + count; // 4+2=6 右边到了页码6
+                            } else {
+                                left = this.page_count - this.page_group + 1;
+                            }
+                        } else { // 当前页码没有超过中间值，则显示前10页数据
+                            right = this.page_group;
+                        }
+                    }
+
+                    // 遍历添加到数组里
+                    while (left <= right) {
+                        list.push({
+                            text: left,
+                            val: left
+                        });
+                        left++;
+                    }
+                    return list;
+                }
+            },
+        })
+    });
+</script>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>注册页</title>
+    <link href="/static/buyer/css/bootstrap.css" rel="stylesheet">
+    <style>
+        a {
+            color: #333;
+        }
+
+        input[type=checkbox] {
+            margin: 0px;
+        }
+
+        .clearfix {
+            display: block;
+            content: " ";
+            clear: both;
+        }
+
+        /* 外边距 */
+        .margin_0 {
+            margin: 0px;
+        }
+
+        .margin_30 {
+            margin: 30px;
+        }
+
+        .mt_30 {
+            margin-top: 30px;
+        }
+
+        .mb_30 {
+            margin-bottom: 30px;
+        }
+
+        /* 内边距 */
+        .padding_30 {
+            padding: 30px;
+        }
+
+        /*背景色*/
+        .bg_518e17 {
+            background-color: #518e17;
+        }
+
+        .bg_fff {
+            background-color: #fff;
+        }
+
+        /*背景图*/
+
+        /*文字*/
+        .fs_20 {
+            font-size: 20px;
+        }
+
+        .color_fff {
+            color: #fff;
+        }
+
+        .lh_40 {
+            line-height: 40px;
+        }
+
+        .lh_60 {
+            line-height: 40px;
+        }
+
+        .lh_16 {
+            line-height: 16px;
+        }
+
+        /*宽度*/
+        .width_30 {
+            width: 30px;
+        }
+
+        /*高度*/
+        .height_60 {
+            height: 60px;
+        }
+
+        .height_16 {
+            height: 16px;
+        }
+
+        /*边框*/
+        .form_title_border {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row mt_30 mb_30">
+        <div class="col-lg-3 col-lg-offset-3">
+            <div><a href="/index/"><img src="/static/buyer/images/logo02.png"></a></div>
+            <div class="text-danger fs_20 mb_30 mt_30">足不出户 · 新鲜每一天</div>
+            <div><img src="/static/buyer/images/register_banner.png"></div>
+        </div>
+        <div class="col-lg-3">
+            <div class="row form_title_border fs_20">
+                <div class="col-lg-12  text-center height_60">邮箱注册</div>
+            </div>
+            <form class="mt_30" method="post" action="/buyer/register_email/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" class="form-control input-lg" id="email" name="emailname"
+                           placeholder="请输入邮箱"> <br/>
+                    <span id="email_error">{{ dic.email_name_error }}</span>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control input-lg" id="code" name="code"
+                           placeholder="请输入验证码">
+                    <span class="input-group-btn">
+                        <input class="btn btn-success input-lg" id="zphone1" type="button" value="获取验证码"/>
+                    </span>
+                </div>
+                <span>{{ dic.code_error }}{{ dic.code_time_out }}</span>
+                <br/><br/>
+                <div class="form-group">
+                    <input type="password" class="form-control input-lg" id="userpass" name="userpass"
+                           placeholder="密码">
+                </div>
+
+                <button type="submit" id="submit" class="btn btn-lg btn-block btn-danger">注册</button>
+            </form>
+        </div>
+    </div>
+    {% include 'buyer/footer.html' %}
+</div>
+<script src="/static/buyer/js/jquery.min.js"></script>
+<script src="/static/buyer/js/bootstrap.js"></script>
+<script>
+    $(function () {
+        // 1. 创建点击事件
+        $("#zphone1").click(function () {
+            // 2. 获取输入的邮箱
+            var email = $("#email").val();
+            // 3. 发送ajax 请求
+            $.ajax({
+                url: '/buyer/yzm_ajax/',
+                type: 'GET',
+                data: {'email': email},
+                success: function (result) {
+                    alert('发送验证码成功，请查看邮箱,2分钟之内有效!!!');
+                    console.log(result);
+                    if (result.status == 'error') {
+                        $("#email_error").text(result.data);
+                    } else {
+                        $("#email_error").text(result.data);
+                        // 倒计时操作
+                        $("#zphone1").attr('disabled', 'disabled');// 添加不可点击属性
+                        //var countDown = document.getElementById("zphone1");
+                        var time = 120;
+                        var timer = setInterval(function () {
+                            time--;
+                            //countDown.innerHTML = time;
+                            $("#zphone1").val(time + 's');
+                            if (time == 0) {
+                                clearInterval(timer); // 清空定时器
+                                $("#zphone1").val('获取验证码'); // 设置名称
+                                $("#zphone1").removeAttr('disabled');// 删除不可点击属性
+                            }
+                        }, 1000);
+                    }
+                },
+                error: function (result) {
+                    alert('error了');
+                }
+            })
+
+
+        })
+    })
+</script>
+</body>
+</html>

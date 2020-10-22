@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>提交订单</title>
+    <!--引用-->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <style>
+
+        /*1.搜索部分*/
+        .search_bar {
+            margin-top: 15px;
+            /*margin-right: 1px;*/
+        }
+
+
+        .search span {
+            font-size: 18px;
+            font-weight: 500;
+            font-family: "Microsoft Yahei";
+            vertical-align: middle;
+        }
+
+
+        /*3.*/
+        .main {
+            margin-top: 20px;
+        }
+
+        #userinfo {
+            display: block;
+        }
+
+        #allorders, #address {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<!--1.导航开始-->
+{% include 'buyer/nav.html' %}
+<!--导航结束-->
+<div class="container">
+    <!--2.搜索框开始-->
+    <div class="search">
+        <div class="row ">
+            <div class="col-lg-5">
+                <img src="/static/images/logo.png" alt="..." class="img-rounded">
+                <span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;提交订单</span>
+            </div>
+            <div class="col-lg-6 col-lg-offset-1 search_bar">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="搜索商品">
+                        <span class="input-group-btn">
+                    <button class="btn btn-success" style="padding: 6px 50px" type="submit">搜索</button>
+                </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--搜索框结束-->
+    <!--3.主体-->
+    <div class="main">
+        <!--收货地址-->
+        <div>
+            <div class="panel panel-default col-lg-12">
+                <div class="panel-heading">确认收货地址</div>
+                <div class="panel-body">
+                    <div>
+                        北京市 海淀区 东北旺西路8号中关村软件园 （李思 收） 182****7528
+                        <a style="margin-left: 500px" class="btn btn-default" href="edit-address.html" role="button">编辑收货地址</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!--支付方式-->
+        <div>
+            <div class="panel panel-default col-lg-12">
+                <div class="panel-heading">支付方式</div>
+                <div class="panel-body">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" value="option1" checked>
+                            <img src="/static/images/pay/yhk.png" alt="..." class="img-thumbnail">
+                        </label>
+                        <label>
+                            <input type="radio" name="optionsRadios" value="option1">
+                            <img src="/static/images/pay/wx.png" alt="..." class="img-thumbnail">
+                        </label>
+                        <label>
+                            <input type="radio" name="optionsRadios" value="option1">
+                            <img src="/static/images/pay/zfb.png" alt="..." class="img-thumbnail">
+                        </label>
+                        <label>
+                            <input type="radio" name="optionsRadios" value="option1">
+                            <img src="/static/images/pay/yl.png" alt="..." class="img-thumbnail">
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--商品列表-->
+        <div>
+            <div class="panel panel-default col-lg-12">
+                <div class="panel-heading">商品列表</div>
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <tr align="center" valign="middle">
+                            <td>序号</td>
+                            <td>图片</td>
+                            <td>商品名称</td>
+                            <td>商品单位</td>
+                            <td>商品价格</td>
+                            <td>数量</td>
+                            <td>小计</td>
+                        </tr>
+                            <tr align="center" valign="center">
+                                <td>1</td>
+                                <td>
+                                    <img class="img-thumbnail" src="/static/{{ orderdetail_obj.goodsimg.name }}"
+                                         width="60px" alt="">
+                                </td>
+                                <td>{{ orderdetail_obj.goodsname }}</td>
+                                <td>500g</td>
+                                <td>{{ orderdetail_obj.goodsprice }}元</td>
+                                <td>{{ orderdetail_obj.goodsnum }}</td>
+                                <td>{{ orderdetail_obj.goodsxiaoji }}</td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--总金额结算-->
+        <div>
+            <div class="panel panel-default col-lg-12">
+                <div class="panel-heading">总金额结算</div>
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <tr align="center" valign="middle">
+                            <td>商品件数</td>
+                            <td>总金额</td>
+                            <td>运费</td>
+                            <td>实付款</td>
+                        </tr>
+                        <tr align="center" valign="center">
+                            <td>{{ orderdetail_obj.goodsnum}}</td>
+                            <td>
+                                {{ orderdetail_obj.goodsxiaoji }}
+                            </td>
+                            <td>0</td>
+                            <td>{{ orderdetail_obj.goodsxiaoji }}</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--提交订单按钮-->
+        <div>
+            <button type="button" class="btn btn-success col-lg-3 col-lg-offset-9">提交订单</button>
+        </div>
+    </div>
+
+</div>
+<!--4.footer部分-->
+{% include 'buyer/footer.html' %}
+
+<script>
+    $(function () {
+        // 选项卡切换
+        $("ul li").on("click", function () {
+
+            //获取索引值
+            var index = $(this).index();
+            $(".info>div").eq(index).show().siblings().hide();
+            console.log($(this)[0]);
+            $(this).addClass('active');
+            $(this).siblings().removeClass('active');
+
+        });
+        // 全部订单超链接
+        $('#allorders_link').click(
+            function () {
+                alert('xx');
+            }
+        );
+    });
+</script>
+</body>
+</html>

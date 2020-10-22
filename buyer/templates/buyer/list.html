@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天天生鲜——首页</title>
+    <script src="/static/buyer/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/buyer/css/bootstrap.css"/>
+    <script src="/static/buyer/js/bootstrap.js"></script>
+    <script src="/static/buyer/js/vue.min.js"></script>
+    <script src="/static/buyer/js/vue-resource.js"></script>
+
+    <style>
+        .makepos {
+            padding-top: 20px;
+        }
+
+        .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+        }
+
+        .myps span {
+            margin-left: 3px;
+        }
+
+        .newheight {
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .breadcrumb {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+{% include 'buyer/nav.html' %}
+
+
+<header class="container">
+    <div class="col-xs-12 col-sm-3">
+        <img src="/static/images/logo.png"/>
+    </div>
+    <div class="col-xs-12 col-sm-6 makepos">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for...">
+            <span class="input-group-btn">
+                    <button class="btn btn-success" type="button">搜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;索</button>
+                </span>
+        </div><!-- /input-group -->
+    </div>
+    <div class="col-xs-12 col-sm-3">
+        <button class="btn btn-success pull-right" type="button">
+            <img src="/static/images/cart.png"/>我的购物车 <span class="badge">4</span>
+        </button>
+    </div>
+</header>
+<menu class="container">
+    <div class="col-xs-12 col-sm-2">
+        <ul class="list-group">
+            <li class="list-group-item active">全部商品分类</li>
+        </ul>
+
+    </div>
+    <div class="col-xs-12 col-sm-10">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#">首页</a></li>
+            <li role="presentation"><a href="#">手机生鲜</a></li>
+            <li role="presentation"><a href="#">抽奖</a></li>
+        </ul>
+    </div>
+</menu>
+<article class="container">
+    <p class="col-xs-12">全部分类 > 新鲜水果</p>
+</article>
+
+
+<section class="container" id="app">
+    <div class="col-xs-12 col-sm-2">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title text-center newheight">新品推荐</h3>
+            </div>
+            <div class="panel-body">
+
+
+                {% for goods_obj in goods_obj_list %}
+                    {% if  forloop.counter <= 2 %}
+                        <div class="col-xs-12 col-sm-12">
+                            <a href="detail.html" class="thumbnail">
+                                <img src="/static/{{ goods_obj.image.name }}" class="img-responsive">
+                                <p class="text-center">{{ goods_obj.name }}</p>
+                                <p class="text-center">￥{{ goods_obj.price }}</p>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </div>
+    {% comment %}商品类型id{% endcomment %}
+        <input type="hidden" id="goodstype_id" value="{{ goodstype_id }}">
+
+    {% verbatim %}
+    <div class="col-xs-12 col-sm-10">
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <ul class="nav nav-pills">
+                    <li><a href="">默认</a></li>
+                    <li><a href="">价格</a></li>
+                    <li><a href="">人气</a></li>
+                </ul>
+            </div>
+            <div class="panel-body">
+
+                <div>
+                    <div v-for="goods_obj in goodsList" class="col-xs-12 col-sm-3">
+                        <a href="#" class="thumbnail">
+                            <img v-bind:src="'/static/'+goods_obj.images" class="img-responsive">
+                        </a>
+                        <p class="text-center">{{ goods_obj.name }}</p>
+                        <p class="text-center myps">
+                            <span>￥{{ goods_obj.price }}</span><span>{{ goods_obj.price }}/500g</span><span><img
+                                src="/static/buyer/images/carts.png"/></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-xs-12 col-sm-8 col-sm-offset-4">
+
+
+            <ul class="pagination col-xs-12 col-sm-8 col-sm-offset-2">
+
+                <li>
+                    <a href="javascript:void 0" v-on:click="previous" aria-label="Previous">
+                        <span aria-hidden="true">上一页</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="javascript:void 0" v-on:click="next" aria-label="Next">
+                        <span aria-hidden="true">下一页</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% endverbatim %}
+
+</section>
+
+{% include 'buyer/footer.html' %}
+
+<script>
+    $(function () {
+        // 2. 使用vue-resource 发送ajax 获取数据
+        new Vue({
+            el: "#app",
+            data: {
+                goodsList: [],// 盛放数据
+            },
+            created: function () {
+                // 发送ajax
+                var goodstype_id = $("#goodstype_id").val()
+                var url = '/buyer/goodsviews/?goodstype_id='+goodstype_id;
+                this.$http.get(url).then(
+                    // 访问成功后执行
+                    function (result) {
+                        this.goodsList = result.data.results;// 获取数据
+                        console.log(result.data.results)
+
+                    },
+                    // 访问失败后执行
+                    function (result) {
+                        alert('error');
+                    }
+                )
+
+
+            },
+        })
+
+    })
+</script>
+
+</body>
+</html>

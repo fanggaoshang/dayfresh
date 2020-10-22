@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购物车</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    <style>
+        /*重写样式*/
+        a {
+            color: #333;
+        }
+
+        /*高度*/
+        .height_100 {
+            width: 100px;
+        }
+
+        /*宽度*/
+        .width_100 {
+            width: 100px;
+        }
+
+        /*行高*/
+
+        /*内边距*/
+        .pt_28 {
+            padding-top: 28px;
+        }
+
+        .pb_28 {
+            padding-bottom: 28px;
+        }
+
+        .pl_15 {
+            padding-left: 15px;
+        }
+
+        .pr_15 {
+            padding-right: 15px;
+        }
+
+        /*外边距*/
+
+        /*文字*/
+
+        /*边框*/
+        .border_1 {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+{% include 'buyer/nav.html' %}
+<div class="container ">
+    <div class="row pt_28 pb_28">
+        <div class="col-lg-3">
+            <a href="#"><img src="/static/images/logo.png"></a>
+            <span class="pl_15 pr_15">|</span>
+            <span>购物车</span>
+        </div>
+        <div class="col-lg-7 col-lg-offset-2">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search" placeholder="搜索商品">
+                <span class="input-group-btn">
+                    <button class="btn btn-danger" type="submit">搜索</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <form action="/buyer/now_buy_place_order/" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="goods_id" value="{{ goods_obj.id }}">
+        <div>
+            <div class="panel panel-default col-lg-12">
+                <div class="panel-heading">确认收货地址</div>
+                <div class="panel-body">
+                    {% for address_obj in address_obj_list %}
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="address_id" id="optionsRadios1" value="{{ address_obj.id }}"
+                                       checked>
+                                {{ address_obj.detail }}&nbsp;&nbsp;{{ address_obj.name }}
+                                &nbsp;&nbsp;{{ address_obj.phone }}
+                            </label>
+                        </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <table class="table row">
+            <caption>全部商品<span class="text-danger total_count">2</span>件</caption>
+            <thead>
+            <tr>
+                <td class="col-lg-2">商品名称</td>
+                <td class="col-lg-2">商品图片</td>
+                <td class="col-lg-2">商品单位</td>
+                <td class="col-lg-2">商品价格</td>
+                <td class="col-lg-2">数量</td>
+                <td class="col-lg-2">小计</td>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>
+                    <span class="center-block">{{ goods_obj.name }}</span>
+                </td>
+
+                <td>
+                    <img src="/static/{{ goods_obj.image.name }}" class="width_50 height_50 border_1" width="50px">
+                </td>
+                <td>500g</td>
+                <td>{{ goods_obj.price }}元</td>
+                <td>
+                    <div class="input-group width_100">
+                        <input type="text" readonly class="form-control text-center count" name="number" value="{{ number }}"
+                               style="width: 50px">
+                    </div>
+                </td>
+                <td>{{ goodsxiaoji }}元</td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+        <div class="row">
+            <div class="col-sm-3 col-sm-offset-9">
+                <input type="submit" class="btn btn-danger" value="去结算">
+            </div>
+        </div>
+    </form>
+</div>
+{% include 'buyer/footer.html' %}
+
+</body>
+</html>

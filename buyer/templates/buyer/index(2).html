@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天天生鲜首页</title>
+    <script src="{% static 'buyer/js/jquery.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static "buyer/css/bootstrap.css" %}"/>
+    <script src="{% static 'buyer/js/bootstrap.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'buyer/css/index.css' %}">
+</head>
+<body>
+<!--头部导航-->
+{% include 'buyer/nav.html' %}
+<!--logo搜索框购物车-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <a href="/"><img src="{% static 'buyer/images/logo.png' %}" alt=""></a>
+        </div>
+        <!--    搜索框-->
+        <div class="col-md-6">
+            <div class="input-group search_input">
+                <input type="text" class="form-control">
+                <span class="input-group-btn">
+                <button class="btn btn-success">搜&nbsp;&nbsp;&nbsp;索</button>
+            </span>
+            </div>
+        </div>
+        <!--    购物车-->
+        <div class="col-md-3">
+            <a href="/buyer/my_goodscar/"><button class="btn btn-success pull-right cart">
+                <img src="{% static 'buyer/images/cart.png' %}" alt=""> 我的购物车
+                <span class="badge">4</span>
+            </button></a>
+        </div>
+    </div>
+</div>
+<!--轮播图-->
+<div class="container">
+    <div class="row lunbo">
+        <!--列表标签-->
+        <div class="col-lg-2">
+            <ul class="list-group">
+                <li class="list-group-item active" id="quanshang">全部商品分类</li>
+                {% for goodstype_obj in goodstype_obj_list %}
+                    <li class="list-group-item"><a href="#{{ goodstype_obj.id }}">
+                    <img width="20px" height="20px" src="/static/{{ goodstype_obj.logo.name }}" alt="">
+                    {{ goodstype_obj.name }}&nbsp;>
+                </a>
+                {% endfor %}
+                </li>
+            </ul>
+        </div>
+        <!-- 轮播图-->
+        <div class="col-lg-7">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#">首页</a></li>
+                <li><a href="#">手机生鲜</a></li>
+                <li><a href="#">抽奖</a></li>
+            </ul>
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                    {% for lb_goods_obj in lb_goods_obj_list %}
+                        {% if forloop.first %}
+                            <div class="item active">
+                                <a href="#{{ lb_goods_obj.goodstype.id }}"><img
+                                        src="/static/{{ lb_goods_obj.images.name }}" alt=""></a>
+                            </div>
+                        {% else %}
+                            <div class="item">
+                                <a href="#{{ lb_goods_obj.goodstype.id }}"><img
+                                        src="/static/{{ lb_goods_obj.images.name }}" alt=""></a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <!--广告-->
+        <div class="col-lg-3 pull-left">
+            <div class="guanggao">
+                {% for advertising in advertising_list %}
+                    <a href="#"><img src="/static/{{ advertising.images.name }}" alt=""></a>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--商品-->
+<div class="container">
+    {% for goodstype_obj in goodstype_obj_list %}
+            <div class="row" id="{{ goodstype_obj.id }}">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            {{ goodstype_obj.name }}
+                            <div class="pull-right">
+                                <a href="/buyer/more_goods_list/?goodstype_id={{ goodstype_obj.id }}">查看更多...</a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-2">
+                                <img src="/static/{{ goodstype_obj.logo.name }}" alt="">
+                            </div>
+                            {% for goods_obj in goodstype_obj.goods_set.all %}
+                                {% if goods_obj.level != 1 and goods_obj.level != 2 %}
+                                    {# 显示前5个商品#}
+                                    {% if forloop.counter <= 5 %}
+                                    <div class="col-md-2">
+                                        <a href="/buyer/goods_detail/?id={{ goods_obj.id }}" class="thumbnail"
+                                           style="text-align: center;">
+                                            <p class="text-center">{{ goods_obj.name }}</p><br/>
+                                            <img src="/static/{{ goods_obj.images.name }}" alt="">
+                                            <p class="text-center">¥{{ goods_obj.price }}元/500g</p>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+    {% endfor %}
+
+
+</div>
+<!--底部-->
+{% include 'buyer/footer.html' %}
+</body>
+</html>

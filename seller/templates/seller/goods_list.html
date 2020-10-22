@@ -1,0 +1,72 @@
+{% extends 'seller/base.html' %}
+{% block main %}
+    <div class="container-fluid">
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">商品类型列表</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            <a href="/seller/add_goods/" class="btn btn-success ">添加商品</a>
+                        </div>
+                    </div>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>商品名称</th>
+                            <th>价格</th>
+                            <th>保质期</th>
+                            <th>生产日期</th>
+                            <th>描述</th>
+                            <th>商品类型</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for goods_obj in goods_obj_list %}
+                            <tr>
+                                <td>{{ goods_obj.name }}</td>
+                                <td>{{ goods_obj.price }}</td>
+                                <td>{{ goods_obj.shelf_life }}</td>
+                                <td>{{ goods_obj.production_date |date:'Y-m-d' }}</td>
+                                <td>{{ goods_obj.desc }}</td>
+                                <td>{{ goods_obj.goodstype.name }}</td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {#分页#}
+        <div class="row">
+            <ul class="pagination ml-auto">
+                <li class="page-item">
+                    <a class="page-link">上一页</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">1</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">2</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">3</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">4</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">下一页</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Page level plugins -->
+
+{% endblock %}

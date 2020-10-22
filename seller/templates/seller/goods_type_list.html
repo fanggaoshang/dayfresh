@@ -1,0 +1,94 @@
+{% extends 'seller/base.html' %}
+{% block main %}
+    <div class="container-fluid">
+        <!--添加商品按钮-->
+        <div class="row">
+            <button class="btn btn-primary col-lg-2 ml-auto" data-toggle="modal" data-target="#goods_modal">
+                添加商品类型
+            </button>
+        </div>
+        <h1></h1>
+        <!--商品列表-->
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>商品类型名称</th>
+                    <th>操作</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for goodstype_obj in goodstype_obj_list %}
+                    <tr>
+                        <td>{{ goodstype_obj.name }}</td>
+                        <td>
+                            <a href="/seller/edit_goodstype/?id={{ goodstype_obj.id }}"
+                               class="btn btn-info btn-icon-split">
+                                            <span class="icon text-white-50">
+                                              <i class="fas fa-info-circle"></i>
+                                            </span>
+                                <span class="text">修改</span>
+                            </a>
+                            <a href="/seller/delete_goodstype/?id={{ goodstype_obj.id }}"
+                               class="btn btn-danger btn-icon-split">
+                                            <span class="icon text-white-50">
+                                              <i class="fas fa-trash"></i>
+                                            </span>
+                                <span class="text">删除</span>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <h1></h1>
+        <!--分页-->
+        <div class="row">
+            <ul class="pagination ml-auto">
+                <li class="page-item">
+                    <a class="page-link">上一页</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">1</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">2</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">3</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">4</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">下一页</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {#模态框#}
+    <div class="modal fade" id="goods_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-label="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">添加商品类型</div>
+                <div class="modal-body">
+                    <form class="form" action="/seller/add_goodstype/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="">商品类型名称</label>
+                            <input class="form-control" type="text" name="goodstype_name">
+                        </div>
+                        <div class="form-group">
+                            <label class="">商品类型图片</label>
+                            <input class="form-control" type="file" name="goodstype_img">
+                        </div>
+                        <button class="btn btn-primary fa-pull-right" type="submit">提交商品类型</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

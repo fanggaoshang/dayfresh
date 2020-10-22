@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src='/static/buyer/js/jquery.min.js'></script>
+    <script src='/static/buyer/js/vue.min.js'></script>
+</head>
+<body>
+{% verbatim %}
+<div id="app">
+    <a v-bind:href="url">百度一下</a>
+</div>
+{% endverbatim %}
+</body>
+<script>
+    $(function () {
+        new Vue({
+            el: '#app',
+            data: {
+                msg: "hello",
+                url: "https://www.baidu.com/"
+            }
+        })
+    })
+</script>
+</html>

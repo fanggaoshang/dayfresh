@@ -1,0 +1,41 @@
+#quanshang{
+    background-color: #449D44;
+    color: white;
+}
+.search_input{
+    margin-top: 20px;
+}
+
+.lunbo{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.carousel-inner>.item>a>img{
+    height: 252px;
+}
+.guanggao{
+    margin-top:42px;
+}
+.guanggao>a>img{
+    height: 126px;
+    width: 261px;
+}
+.panel-body>div>img {
+    width: 156px;
+    height: 232px;
+}
+a{
+    text-decoration: none;
+}
+.arrow_up{
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #cccccc;
+}
+.arrow_up img{
+    width: 50px;
+    /*height: 100px;*/
+}

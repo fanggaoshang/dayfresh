@@ -1,0 +1,29 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid container">
+        <div class="navbar-header ">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/buyer/index/">欢迎来到天天生鲜</a>
+        </div>
+        <!-- 所有的登陆注销项导航栏类目 -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                {% if request.COOKIES.user_name %}
+                    <li><a>欢迎:{{ request.COOKIES.user_name }}</a></li>
+                    <li><a href="/buyer/logout/">退出</a></li>
+                {% else %}
+                    <li><a href="/buyer/login/">登录</a></li>
+                    <li><a href="/buyer/register/">注册</a></li>
+                {% endif %}
+                <li><a href="/buyer/usercenter/">用户中心</a></li>
+
+                <li><a href="/buyer/my_goodscar/">我的购物车</a></li>
+                <li><a href="/buyer/my_orders/">我的订单</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
